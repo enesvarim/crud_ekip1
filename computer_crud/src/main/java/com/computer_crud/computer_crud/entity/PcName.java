@@ -6,16 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Model {
+public class PcName {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
+
     private String model_name;
 
     @ManyToOne
