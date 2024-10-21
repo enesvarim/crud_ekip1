@@ -15,7 +15,7 @@ public class PcName {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String model_name;
+    private String pcName;
 
     @ManyToOne
     @JoinColumn(name = "processor_id")

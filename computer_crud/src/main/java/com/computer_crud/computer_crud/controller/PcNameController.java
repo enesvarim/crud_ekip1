@@ -1,6 +1,7 @@
 package com.computer_crud.computer_crud.controller;
 
 
+import com.computer_crud.computer_crud.DTO.PcNameDTO;
 import com.computer_crud.computer_crud.entity.PcName;
 import com.computer_crud.computer_crud.service.PcNameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class PcNameController {
     }
 
     @PostMapping("/model")
-    public String addModel(@RequestBody PcName model) {
-        return service.addModel(model);
+    public String addModel(@RequestBody PcNameDTO pcNameDTO) {
+        return service.addModel(pcNameDTO);
     }
 
     @GetMapping("/model/{id}")
@@ -28,9 +29,9 @@ public class PcNameController {
         return service.getModelById(id);
     }
 
-    @PutMapping("/model")
-    public String updateModel(@RequestBody PcName model) {
-        return service.updateModel(model);
+    @PutMapping("/model/{id}")
+    public String updateModel(@PathVariable("id") Integer id,@RequestBody PcNameDTO pcNameDTO) {
+        return service.updateModel(id,pcNameDTO);
     }
 
     @DeleteMapping("/model/{id}")

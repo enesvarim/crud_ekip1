@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/computer_crud/computer_crud.iml" filepath="$PROJECT_DIR$/computer_crud/computer_crud.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/crud_ekip1.iml" filepath="$PROJECT_DIR$/.idea/crud_ekip1.iml" />
     </modules>
   </component>
