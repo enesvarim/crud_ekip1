@@ -15,6 +15,4 @@ public class PcNameDTO {
     private String processorName;
     private String graphicscardName;
 
-
-
 }

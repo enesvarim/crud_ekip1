@@ -61,14 +61,23 @@ public class PcNameService {
         BeanUtils.copyProperties(pcName, pcNameDTO);
         return pcNameDTO;
     }
-    
+
 
     public String updateModel(Integer id,PcNameDTO pcNameDTO) {
-        PcName pcName = new PcName();
+        PcName pcName = repository.findById(id).get();
         BeanUtils.copyProperties(pcNameDTO, pcName);
+
+        Processor processor = processorRepository.findByProcessorName(pcNameDTO.getProcessorName());
+        GraphicsCard graphicsCard = graphicsCardRepository.findByGraphicscardName(pcNameDTO.getGraphicscardName());
+
+        pcName.setProcessor(processor);
+        pcName.setGraphicsCard(graphicsCard);
         repository.save(pcName);
         return "Model Updated Successfully";
     }
+
+
+
 
     public String deleteModel(int id) {
         repository.deleteById(id);
