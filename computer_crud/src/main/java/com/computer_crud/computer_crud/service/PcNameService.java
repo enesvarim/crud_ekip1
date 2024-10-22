@@ -46,6 +46,8 @@ public class PcNameService {
         List<PcNameDTO> pcNameDTOList = new ArrayList<>();
         for (PcName pcName : repository.findAll()) {
             PcNameDTO pcNameDTO = new PcNameDTO();
+            pcNameDTO.setGraphicscardName(pcName.getGraphicsCard().getGraphicscardName());
+            pcNameDTO.setProcessorName(pcName.getProcessor().getProcessorName());
             BeanUtils.copyProperties(pcName, pcNameDTO);
             pcNameDTOList.add(pcNameDTO);
         }
