@@ -1,23 +1,19 @@
 package com.computer_crud.computer_crud.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Processor {
-
+public class ProcessorNo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long processorId;
+    private String processorNoId;
 
-    private String processorName;
-
-    @ManyToOne
-    @JoinColumn(name = "processorNoId")
-    private ProcessorNo processorNo;
-
+    private String processorNoName;
 
 }

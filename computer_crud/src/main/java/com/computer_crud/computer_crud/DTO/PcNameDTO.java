@@ -8,11 +8,17 @@ import lombok.*;
 @NoArgsConstructor
 public class PcNameDTO {
 
-    @JsonIgnore
-    private int id;
 
     private String pcName;
     private String processorName;
     private String graphicscardName;
+    private String brandsName;
+    private int ramSize;
+    private String processorNoName;
+    private int memorySize;
+    private String memoryType;
+    private int price;
+
+
 
 }

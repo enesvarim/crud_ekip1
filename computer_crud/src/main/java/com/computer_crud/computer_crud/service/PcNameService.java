@@ -2,12 +2,8 @@ package com.computer_crud.computer_crud.service;
 
 
 import com.computer_crud.computer_crud.DTO.PcNameDTO;
-import com.computer_crud.computer_crud.entity.GraphicsCard;
-import com.computer_crud.computer_crud.entity.PcName;
-import com.computer_crud.computer_crud.entity.Processor;
-import com.computer_crud.computer_crud.repository.GraphicsCardRepository;
-import com.computer_crud.computer_crud.repository.PcNameRepository;
-import com.computer_crud.computer_crud.repository.ProcessorRepository;
+import com.computer_crud.computer_crud.entity.*;
+import com.computer_crud.computer_crud.repository.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,15 +23,48 @@ public class PcNameService {
     @Autowired
     private GraphicsCardRepository graphicsCardRepository;
 
-    public String addModel(PcNameDTO pcNameDTO) {
-        PcName pcName = new PcName();
-        BeanUtils.copyProperties(pcNameDTO, pcName);
+    @Autowired
+    private RamRepository ramRepository;
 
+    @Autowired
+    private ProcessorNoRepository processorNoRepository;
+
+    @Autowired
+    private BrandsRepository brandsRepository;
+
+    @Autowired
+    private MemorySizeRepository memorySizeRepository;
+
+    @Autowired
+    private MemoryTypeRepository memoryTypeRepository;
+
+    @Autowired
+    private PriceRepository priceRepository;
+
+
+
+    public String addModel(PcNameDTO pcNameDTO) {
         Processor processor = processorRepository.findByProcessorName(pcNameDTO.getProcessorName());
         GraphicsCard graphicsCard = graphicsCardRepository.findByGraphicscardName(pcNameDTO.getGraphicscardName());
+        Ram ram = ramRepository.findByRamSize(pcNameDTO.getRamSize());
+        Brands brands = brandsRepository.findByBrandsName(pcNameDTO.getBrandsName());
+        ProcessorNo processorNo = processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName());
+        MemorySize memorySize = memorySizeRepository.findByMemorySize(pcNameDTO.getMemorySize());
+        MemoryType memoryType = memoryTypeRepository.findByMemoryType(pcNameDTO.getMemoryType());
+        Price price = priceRepository.findByPrice(pcNameDTO.getPrice());
+
+
+        PcName pcName = new PcName();
+        pcName.setPcName(pcNameDTO.getPcName());
 
         pcName.setProcessor(processor);
+        pcName.getProcessor().setProcessorNo(processorNo);
         pcName.setGraphicsCard(graphicsCard);
+        pcName.setRam(ram);
+        pcName.setBrands(brands);
+        pcName.setMemoryType(memoryType);
+        pcName.getMemoryType().setMemorySize(memorySize);
+        pcName.setPrice(price);
 
         repository.save(pcName);
         return "Model Added Successfully";
