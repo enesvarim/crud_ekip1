@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class ProcessorNo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String processorNoId;
+    private int processorNoId;
 
     private String processorNoName;
 

@@ -17,5 +17,5 @@ public class MemorySize {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private int memoryId;
 
-    private int memorySize;
+    private Integer memorySize;
 }

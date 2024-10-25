@@ -44,27 +44,67 @@ public class PcNameService {
 
 
     public String addModel(PcNameDTO pcNameDTO) {
-        Processor processor = processorRepository.findByProcessorName(pcNameDTO.getProcessorName());
-        GraphicsCard graphicsCard = graphicsCardRepository.findByGraphicscardName(pcNameDTO.getGraphicscardName());
-        Ram ram = ramRepository.findByRamSize(pcNameDTO.getRamSize());
-        Brands brands = brandsRepository.findByBrandsName(pcNameDTO.getBrandsName());
-        ProcessorNo processorNo = processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName());
-        MemorySize memorySize = memorySizeRepository.findByMemorySize(pcNameDTO.getMemorySize());
-        MemoryType memoryType = memoryTypeRepository.findByMemoryType(pcNameDTO.getMemoryType());
-        Price price = priceRepository.findByPrice(pcNameDTO.getPrice());
-
 
         PcName pcName = new PcName();
-        pcName.setPcName(pcNameDTO.getPcName());
 
-        pcName.setProcessor(processor);
-        pcName.getProcessor().setProcessorNo(processorNo);
-        pcName.setGraphicsCard(graphicsCard);
-        pcName.setRam(ram);
-        pcName.setBrands(brands);
+
+        if (processorRepository.findByProcessorName(pcNameDTO.getProcessorName()) != null) {
+            Processor processor = processorRepository.findByProcessorName(pcNameDTO.getProcessorName());
+            processor.setProcessorName(pcNameDTO.getProcessorName());
+            if (processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName()) != null) {
+                ProcessorNo processorNo = processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName());
+                processor.setProcessorNo(processorNo);
+                processorRepository.save(processor);
+                pcName.setProcessor(processor);
+            }
+            else {
+                processor.getProcessorNo().setProcessorNoId(0);
+                processorRepository.save(processor);
+                pcName.setProcessor(processor);
+            }
+        }
+        else {
+            pcName.getProcessor().setProcessorId(0L);
+            pcName.getProcessor().getProcessorNo().setProcessorNoId(0);
+        }
+
+        //yukardaki yapının benzeri bunada uygulanacak
+        MemoryType memoryType = memoryTypeRepository.findByMemoryType(pcNameDTO.getMemoryType());
+        memoryType.setMemoryType(pcNameDTO.getMemoryType());
+        MemorySize memorySize = memorySizeRepository.findByMemorySize(pcNameDTO.getMemorySize());
+        memoryType.setMemorySize(memorySize);
+        memoryTypeRepository.save(memoryType);
         pcName.setMemoryType(memoryType);
-        pcName.getMemoryType().setMemorySize(memorySize);
-        pcName.setPrice(price);
+
+
+        if (graphicsCardRepository.findByGraphicscardName(pcNameDTO.getGraphicscardName()) == null) {
+            pcName.getGraphicsCard().setGraphicsCardId(0L);
+        }
+        else {
+            GraphicsCard graphicsCard = graphicsCardRepository.findByGraphicscardName(pcNameDTO.getGraphicscardName());
+            pcName.setGraphicsCard(graphicsCard);
+        }
+         if (ramRepository.findByRamSize(pcNameDTO.getRamSize()) == null) {
+            pcName.getRam().setRamSize(0);}
+        else {
+            Ram ram = ramRepository.findByRamSize(pcNameDTO.getRamSize());
+            pcName.setRam(ram);
+         }
+
+        Brands brands = brandsRepository.findByBrandsName(pcNameDTO.getBrandsName());
+        if (priceRepository.findByPrice(pcNameDTO.getPrice()) == null) {
+            Price price = new Price();
+            price.setPrice(pcNameDTO.getPrice());
+            priceRepository.save(price);
+            pcName.setPrice(price);
+        }
+        else {
+            Price price = priceRepository.findByPrice(pcNameDTO.getPrice());
+            pcName.setPrice(price);
+        }
+
+        pcName.setPcName(pcNameDTO.getPcName());
+        pcName.setBrands(brands);
 
         repository.save(pcName);
         return "Model Added Successfully";
@@ -77,8 +117,15 @@ public class PcNameService {
             PcNameDTO pcNameDTO = new PcNameDTO();
             pcNameDTO.setGraphicscardName(pcName.getGraphicsCard().getGraphicscardName());
             pcNameDTO.setProcessorName(pcName.getProcessor().getProcessorName());
-            BeanUtils.copyProperties(pcName, pcNameDTO);
+            pcNameDTO.setBrandsName(pcName.getBrands().getBrandsName());
+            pcNameDTO.setRamSize(pcName.getRam().getRamSize());
+            pcNameDTO.setProcessorNoName(pcName.getProcessor().getProcessorNo().getProcessorNoName());
+            pcNameDTO.setMemorySize(pcName.getMemoryType().getMemorySize().getMemorySize());
+            pcNameDTO.setMemoryType(pcName.getMemoryType().getMemoryType());
+            pcNameDTO.setPrice(pcName.getPrice().getPrice());
+            pcNameDTO.setPcName(pcName.getPcName());
             pcNameDTOList.add(pcNameDTO);
+
         }
         return pcNameDTOList;
     }
