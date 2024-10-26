@@ -49,62 +49,54 @@ public class PcNameService {
         pcName.setPcName(pcNameDTO.getPcName());
 
 
-        if (processorRepository.findByProcessorName(pcNameDTO.getProcessorName()) != null) {
-            if (processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName()) == null) {
-                Processor processor = new Processor();
-                processor.setProcessorName(pcNameDTO.getProcessorNoName());
-                processorRepository.save(processor);
-                if (processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName()) == null) {
-                    return "Processor No is not found";
-                }
-                else {
-                    ProcessorNo processorNo = processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName());
-                    processor.setProcessorNo(processorNo);
-                    processorRepository.save(processor);
-                    pcName.setProcessor(processor);
-                }
+        if (memoryTypeRepository.findByMemoryType(pcNameDTO.getMemoryType()) != null){
+            if (memorySizeRepository.findByMemorySize(pcNameDTO.getMemorySize()) ==  null){
+                return "Memory Size is not found";
             }
             else {
-                ProcessorNo processorNo = processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName());
-                Processor processor = processorRepository.findByProcessorName(pcNameDTO.getProcessorName());
-                processor.setProcessorNo(processorNo);
-                processorRepository.save(processor);
-                pcName.setProcessor(processor);
-            }
-        }
-        else {
-            return"Processor Name is not found";
-        }
-
-
-
-        if (memoryTypeRepository.findByMemoryType(pcNameDTO.getMemoryType()) != null) {
-            if (memorySizeRepository.findByMemorySize(pcNameDTO.getMemorySize()) == null) {
-                MemoryType memoryType = new MemoryType();
-                memoryType.setMemoryType(pcNameDTO.getMemoryType());
-                memoryTypeRepository.save(memoryType);
-                if (memorySizeRepository.findByMemorySize(pcNameDTO.getMemorySize()) == null) {
-                    return "Memory Size is not found";
+                if (memoryTypeRepository.findByMemorySize(memorySizeRepository.findByMemorySize(pcNameDTO.getMemorySize())).equals(pcNameDTO.getProcessorNoName())) {
+                    MemorySize memorySize = memorySizeRepository.findByMemorySize(pcNameDTO.getMemorySize());
+                    MemoryType memoryType = memoryTypeRepository.findByMemoryType(pcNameDTO.getMemoryType());
+                    memoryType.setMemorySize(memorySize);
+                    memoryTypeRepository.save(memoryType);
+                    pcName.setMemoryType(memoryType);
                 }
                 else {
+                    ;
+                    MemoryType memoryType = new MemoryType();
+                    memoryType.setMemoryType(pcNameDTO.getMemoryType());
                     MemorySize memorySize = memorySizeRepository.findByMemorySize(pcNameDTO.getMemorySize());
                     memoryType.setMemorySize(memorySize);
                     memoryTypeRepository.save(memoryType);
                     pcName.setMemoryType(memoryType);
                 }
+            }
+        }
 
+        if (processorRepository.findByProcessorName(pcNameDTO.getProcessorName()) != null) {
+            if (processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName()) == null) {
+                return "Processor No is not found";
             }
             else {
-                MemorySize memorySize = memorySizeRepository.findByMemorySize(pcNameDTO.getMemorySize());
-                MemoryType memoryType = memoryTypeRepository.findByMemoryType(pcNameDTO.getMemoryType());
-                memoryType.setMemorySize(memorySize);
-                memoryTypeRepository.save(memoryType);
-                pcName.setMemoryType(memoryType);
+                if (processorRepository.findByProcessorNo(processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName())) == null) {
+                    Processor processor = new Processor();
+                    processor.setProcessorName(pcNameDTO.getProcessorName());
+                    ProcessorNo processorNo = processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName());
+                    processor.setProcessorNo(processorNo);
+                    processorRepository.save(processor);
+                    pcName.setProcessor(processor);
+                }
+                else {
+                    ProcessorNo processorNo = processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName());
+                    Processor processor = processorRepository.findByProcessorName(pcNameDTO.getProcessorName());
+                    processor.setProcessorNo(processorNo);
+                    processorRepository.save(processor);
+                    pcName.setProcessor(processor);
+                }
             }
-
         }
         else {
-            return "Memory Type is not found";
+            return"Processor Name is not found";
         }
 
 
