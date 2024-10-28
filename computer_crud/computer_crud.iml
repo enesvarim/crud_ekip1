@@ -7,7 +7,7 @@
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
           <factory-entry name="computer_crud" value="3ccfa427-9843-4266-ab2f-84293faafbc1" />
-          <factory-entry name="entityManagerFactory" />
+          <factory-entry name="entityManagerFactory" value="3ccfa427-9843-4266-ab2f-84293faafbc1" />
         </datasource-mapping>
         <naming-strategy-map />
       </configuration>

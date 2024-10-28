@@ -18,6 +18,6 @@ public class MemoryType {
     private String memoryType;
 
     @ManyToOne
-    @JoinColumn(name = "Memory_size")
+    @JoinColumn(name = "Memory_size", referencedColumnName = "memoryId")
     private MemorySize memorySize;
 }

@@ -54,23 +54,36 @@ public class PcNameService {
                 return "Memory Size is not found";
             }
             else {
-                if (memoryTypeRepository.findByMemorySize(memorySizeRepository.findByMemorySize(pcNameDTO.getMemorySize())).equals(pcNameDTO.getProcessorNoName())) {
-                    MemorySize memorySize = memorySizeRepository.findByMemorySize(pcNameDTO.getMemorySize());
-                    MemoryType memoryType = memoryTypeRepository.findByMemoryType(pcNameDTO.getMemoryType());
-                    memoryType.setMemorySize(memorySize);
-                    memoryTypeRepository.save(memoryType);
-                    pcName.setMemoryType(memoryType);
+                List<MemoryType> memoryTypeList =new ArrayList<>();
+                memoryTypeList = memoryTypeRepository.findByMemoryTypeList(pcNameDTO.getMemoryType());
+
+                int a = 0;
+                MemoryType memoryType1 = new MemoryType();
+                for (MemoryType type : memoryTypeList) {
+                    if (type.getMemorySize().getMemorySize() == pcNameDTO.getMemorySize()) {
+                        a = 1;
+                        memoryType1 = type;
+
+                    }
+                    if (a == 0) {
+                        MemoryType memoryType = new MemoryType();
+                        memoryType.setMemoryType(pcNameDTO.getMemoryType());
+                        MemorySize memorySize = memorySizeRepository.findByMemorySize(pcNameDTO.getMemorySize());
+                        memoryType.setMemorySize(memorySize);
+                        memoryTypeRepository.save(memoryType);
+                        pcName.setMemoryType(memoryType);
+                    } else if (a == 1) {
+                        memoryTypeRepository.save(memoryType1);
+                        pcName.setMemoryType(memoryType1);
+
+                    }
+
                 }
-                else {
-                    ;
-                    MemoryType memoryType = new MemoryType();
-                    memoryType.setMemoryType(pcNameDTO.getMemoryType());
-                    MemorySize memorySize = memorySizeRepository.findByMemorySize(pcNameDTO.getMemorySize());
-                    memoryType.setMemorySize(memorySize);
-                    memoryTypeRepository.save(memoryType);
-                    pcName.setMemoryType(memoryType);
-                }
+
             }
+        }
+        else {
+            return "Memory Type is not found";
         }
 
         if (processorRepository.findByProcessorName(pcNameDTO.getProcessorName()) != null) {
@@ -78,26 +91,33 @@ public class PcNameService {
                 return "Processor No is not found";
             }
             else {
-                if (processorRepository.findByProcessorNo(processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName())) == null) {
-                    Processor processor = new Processor();
-                    processor.setProcessorName(pcNameDTO.getProcessorName());
-                    ProcessorNo processorNo = processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName());
-                    processor.setProcessorNo(processorNo);
-                    processorRepository.save(processor);
-                    pcName.setProcessor(processor);
+                List<Processor> processorList = new ArrayList<>();
+                processorList = processorRepository.findByProcessorNameList(pcNameDTO.getProcessorName());
+                int a = 0;
+                Processor processor1 = new Processor();
+                for (Processor processor2 : processorList) {
+                    if (processor2.getProcessorNo().getProcessorNoName() == pcNameDTO.getProcessorNoName()) {
+                        a = 1;
+                        processor1 = processor2;
+                    }
+                    if (a == 0) {
+                        Processor processor = new Processor();
+                        processor.setProcessorName(pcNameDTO.getProcessorName());
+                        ProcessorNo processorNo = processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName());
+                        processor.setProcessorNo(processorNo);
+                        processorRepository.save(processor);
+                        pcName.setProcessor(processor);
+                    } else if (a == 1) {
+                        pcName.setProcessor(processor1);
+                    }
                 }
-                else {
-                    ProcessorNo processorNo = processorNoRepository.findByProcessorNoName(pcNameDTO.getProcessorNoName());
-                    Processor processor = processorRepository.findByProcessorName(pcNameDTO.getProcessorName());
-                    processor.setProcessorNo(processorNo);
-                    processorRepository.save(processor);
-                    pcName.setProcessor(processor);
-                }
-            }
-        }
+
+
+            }}
         else {
-            return"Processor Name is not found";
-        }
+                return "Processor Name is not found";
+            }
+
 
 
         GraphicsCard graphicsCard = graphicsCardRepository.findByGraphicscardName(pcNameDTO.getGraphicscardName());
@@ -145,6 +165,12 @@ public class PcNameService {
             }
             else {
                 pcNameDTO.setProcessorName(pcName.getProcessor().getProcessorName());
+                if (pcName.getProcessor().getProcessorNo() == null) {
+                    pcNameDTO.setProcessorNoName("Bilgi Yok");
+                }
+                else {
+                    pcNameDTO.setProcessorNoName(pcName.getProcessor().getProcessorNo().getProcessorNoName());
+                }
             }
             if (pcName.getBrands() == null) {
                 pcNameDTO.setBrandsName("Bilgi Yok");
@@ -158,24 +184,20 @@ public class PcNameService {
             else {
                 pcNameDTO.setRamSize(pcName.getRam().getRamSize());
             }
-            if (pcName.getProcessor() == null) {
-                pcNameDTO.setProcessorNoName("Bilgi Yok");
-            }
-            else {
-                pcNameDTO.setProcessorNoName(pcName.getProcessor().getProcessorNo().getProcessorNoName());
-            }
+
             if (pcName.getMemoryType() == null) {
                 pcNameDTO.setMemoryType("Bilgi Yok");
             }
             else {
                 pcNameDTO.setMemoryType(pcName.getMemoryType().getMemoryType());
+                if (pcName.getMemoryType().getMemorySize() == null) {
+                    pcNameDTO.setMemorySize(0);
+                } else {
+                    pcNameDTO.setMemorySize(pcName.getMemoryType().getMemorySize().getMemorySize());
+                }
             }
-            if (pcName.getMemoryType().getMemorySize() == null) {
-                pcNameDTO.setMemorySize(0);
-            }
-            else {
-                pcNameDTO.setMemorySize(pcName.getMemoryType().getMemorySize().getMemorySize());
-            }
+
+
             if (pcName.getPrice() == null) {
                 pcNameDTO.setPrice(0);
             }
@@ -183,7 +205,7 @@ public class PcNameService {
                 pcNameDTO.setPrice(pcName.getPrice().getPrice());
             }
 
-
+            pcNameDTO.setPcName(pcName.getPcName());
             pcNameDTOList.add(pcNameDTO);
 
         }
